@@ -2,8 +2,7 @@ use clap::{Arg, Command};
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::env;
-use std::io::{self, Read};
-use std::process;
+use std::io::{self, Read, Write}; // Import Write trait
 
 #[derive(Serialize)]
 struct DeeplRequest {
@@ -25,22 +24,21 @@ struct DeeplResponse {
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Define the CLI arguments
-    let matches = Command::new("deepl_translate")
+    let matches = Command::new("rustranslate")
         .version("0.1.0")
-        .author("Your Name <youremail@example.com>")
+        .author("d3vboi@proton.me")
         .about("Translates text using the DeepL API")
         .arg(
             Arg::new("set-api-key")
                 .long("set-api-key")
-                .help("Prompt to set the DeepL API key")
-                .takes_value(false),
+                .help("Prompt to set the DeepL API key"),
         )
         .get_matches();
 
     // Check if --set-api-key was provided
-    if matches.is_present("set-api-key") {
+    if matches.contains_id("set-api-key") {
         print!("Enter your DeepL API key: ");
-        io::stdout().flush()?;
+        io::stdout().flush()?; // Use flush from Write trait
         let mut api_key = String::new();
         io::stdin().read_line(&mut api_key)?;
         let api_key = api_key.trim();
